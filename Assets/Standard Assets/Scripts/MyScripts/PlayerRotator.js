@@ -1,33 +1,48 @@
 #pragma strict
 
+private var rotationSpeed : float = 0.001;
+
 // Direction character should be facing.
-var forwardDir : Vector3;
+private var forwardDir : Quaternion;
 
 function Start () {
-	forwardDir = Vector3.right * -1;
+	forwardDir = transform.rotation;
 	
 	// Remove renderers from rotators to hide them visually.
 	var rotators : GameObject[];
 	rotators = GameObject.FindGameObjectsWithTag("Rotator");
 	for (var rotator : GameObject in rotators) {
-		var rend : Renderer = rotator.GetComponent(Renderer);
-		rend.enabled = false;
+		for (var rend : Renderer in rotator.GetComponentsInChildren(Renderer)) {
+			rend.enabled = false;
+		}
 	}
 }
 
-function Update () {
-
-}
-
 function OnTriggerEnter(other : Collider) {
-    if (other.tag != "Rotator") {
+	var parent : GameObject = other.gameObject.transform.parent.gameObject;
+    if (parent.tag != "Rotator") {
     	return;
   	}
   	
-  	Debug.Log("Setting forward direction to rotator plane's normal vector.");
+  	// Find the look target.
+  	var lookTarget : Transform;
+  	for (var child : Transform in parent.transform) {
+  		if (child.gameObject.tag == "LookTarget") {
+  			lookTarget = child;
+  		}
+  	}
+  	
+  	Debug.Log("Hit a rotator, facing player to little cube thingie.");
+	//transform.LookAt(lookTarget);
 
-	transform.rotation = other.gameObject.transform.rotation;
+	// Save the rotation that we'd have if we looked at the target.
+	var looking : Transform;
+	looking = Instantiate(transform, transform.position, transform.rotation);
+	looking.LookAt(lookTarget);
+	forwardDir = looking.rotation;
+}
 
-	//forwardDir = -1 * other.gameObject.transform.up;
-	//Debug.Log(forwardDir);
+function Update () {
+	// Slerp to a desired look direction.
+	transform.rotation = Quaternion.Slerp(transform.rotation, forwardDir, 0.1 * Time.time);
 }

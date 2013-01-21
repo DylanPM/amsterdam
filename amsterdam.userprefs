@@ -2,7 +2,7 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/CameraCollider.js">
     <Files>
-      <File FileName="Assets/Standard Assets/Scripts/MyScripts/PlayerRotator.js" Line="11" Column="15" />
+      <File FileName="Assets/Standard Assets/Scripts/MyScripts/PlayerRotator.js" Line="1" Column="1" />
       <File FileName="Assets/Standard Assets/Character Controllers/Sources/Scripts/ThirdPersonController.js" Line="1" Column="1" />
       <File FileName="Assets/Scripts/CameraCollider.js" Line="1" Column="1" />
     </Files>

@@ -2,7 +2,8 @@
 #pragma implicit
 #pragma downcast
 
-var rotatorScript : PlayerRotator;
+var speed : float = 100.0;
+var desiredFacingDir : Quaternion;
 
 // Does this script currently respond to input?
 var canControl : boolean = true;
@@ -180,8 +181,6 @@ private var controller : CharacterController;
 function Awake () {
 	controller = GetComponent (CharacterController);
 	tr = transform;
-	
-	rotatorScript = GetComponent(PlayerRotator);
 }
 
 private function UpdateFunction () {
@@ -359,11 +358,6 @@ private function ApplyInputVelocityChange (velocity : Vector3) {
 	else
 		desiredVelocity = GetDesiredHorizontalVelocity();
 	
-	// Based on pills and bombs and shit, add a forward velocity.
-	//var forwardDir : Vector3 = rotatorScript.forwardDir;
-	//desiredVelocity += forwardDir * (100 * Time.deltaTime);
-	desiredVelocity += Camera.main.transform.rotation * Vector3.forward * (100 * Time.deltaTime);
-	
 	if (movingPlatform.enabled && movingPlatform.movementTransfer == MovementTransferOnJump.PermaTransfer) {
 		desiredVelocity += movement.frameVelocity;
 		desiredVelocity.y = 0;
@@ -391,6 +385,9 @@ private function ApplyInputVelocityChange (velocity : Vector3) {
 		// When going downhill, DO move down manually, as gravity is not enough on steep hills.
 		velocity.y = Mathf.Min(velocity.y, 0);
 	}
+	
+	// Based on pills and bombs and shit, add a forward velocity.
+	velocity += Camera.main.transform.rotation * Vector3.forward * (speed * Time.deltaTime);
 	
 	return velocity;
 }
